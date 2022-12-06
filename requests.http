@@ -2,8 +2,8 @@ POST http://localhost:8080/exercise
 Content-type: application/json
 
 {
-    "startTime": "2017-01-01 11:50",
-    "durationInSeconds": 360,
+    "startTime": "2022-01-01 11:50",
+    "durationInSeconds": 60,
     "activityType": "running"
 }
 
@@ -13,4 +13,4 @@ GET http://localhost:8080/exercise
 
 ###
 
-GET http://localhost:8080/exercise/638e64f32412272628733676
+GET http://localhost:8080/exercise/638f0496e8fb58228c5e6968
