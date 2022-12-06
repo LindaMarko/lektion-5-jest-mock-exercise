@@ -7,8 +7,35 @@ const makeApp = ({ createExercise, getExerciseById, getAllExercise }: any) => {
   app.use(json());
 
   app.post('/exercise', async (req, res) => {
-    const exercise = await createExercise(req.body);
-    res.json(exercise);
+    const errors = [];
+
+    if (!req.body.startTime || req.body.startTime.length === 0) {
+      errors.push({
+        error: 'You must provide a starting time',
+      });
+    }
+
+    if (
+      !req.body.durationInSeconds ||
+      isNaN(Number(req.body.durationInSeconds))
+    ) {
+      errors.push({
+        error: 'You must provide a duration',
+      });
+    }
+
+    if (!req.body.activityType || req.body.activityType === 0) {
+      errors.push({
+        error: 'You must provide an activity type',
+      });
+    }
+
+    if (errors.length) {
+      res.status(400).json(errors);
+    } else {
+      const exercise = await createExercise(req.body);
+      res.json(exercise);
+    }
   });
 
   app.get('/exercise', async (req, res) => {
