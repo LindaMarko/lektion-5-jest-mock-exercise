@@ -15,6 +15,7 @@ const validExerciseData = {
 };
 
 describe('POST /exersice', () => {
+  
   beforeAll(() => {
     nock('https://api.open-meteo.com')
       .get(
@@ -22,7 +23,17 @@ describe('POST /exersice', () => {
       )
       .times(1)
       .reply(200, {
-        "temperature": 25.6,
+        "latitude":52.52,
+        "longitude":13.419998,
+        "generationtime_ms":0.2880096435546875,
+        "utc_offset_seconds":0,
+        "timezone":"GMT",
+        "timezone_abbreviation":"GMT",
+        "elevation":38.0,
+        "daily_units":{"time":"iso8601",
+        "temperature_2m_max":"°C"},
+        "daily":{"time":["2022-06-08"],
+        "temperature_2m_max":[25.6]}
       });
   });
 
@@ -77,11 +88,19 @@ describe('POST /exersice', () => {
   });
 });
 
-/* describe('GET /exercise/:id', () => {
+describe('GET /exercise/:id', () => {
   it('should return a correct temperature', async () => {
     const response = await request(app).get(
       '/exercise/638f0496e8fb58228c5e6968'
     );
     expect(response.body.temperature).toBe(25.6);
   });
-}); */
+
+  it('should return 400 when id does not exist or invalid', async () => {
+    const response = await request(app).get(
+      '/exercise/hej'
+    );
+    console.log(response)
+    expect(response.statusCode).toBe(400);
+  });
+});

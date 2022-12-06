@@ -34,6 +34,8 @@ const makeApp = ({ createExercise, getExerciseById, getAllExercise }: any) => {
       res.status(400).json(errors);
     } else {
       const exercise = await createExercise(req.body);
+      console.log(exercise)
+      
       res.json(exercise);
     }
   });
@@ -44,6 +46,7 @@ const makeApp = ({ createExercise, getExerciseById, getAllExercise }: any) => {
 
   app.get('/exercise/:id', async (req, res) => {
     const exercise = await getExerciseById(req.params.id);
+    console.log(exercise)
 
     if (!exercise) {
       res.status(404).send();
