@@ -25,3 +25,5 @@ export const getExerciseById = async (id: string) => {
 export const getAllExercise = async (id: string) => {
   return await ExerciseModel.find();
 };
+
+export const isValidId = (id: string) => mongoose.Types.ObjectId.isValid(id);

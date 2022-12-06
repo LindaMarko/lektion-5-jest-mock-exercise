@@ -21,7 +21,6 @@ describe('POST /exersice', () => {
       .get(
         '/v1/forecast?latitude=52.52&longitude=13.41&start_date=2022-06-08&end_date=2022-06-08&daily=temperature_2m_max&timezone=GMT'
       )
-      .times(1)
       .reply(200, {
         "latitude":52.52,
         "longitude":13.419998,
@@ -89,6 +88,10 @@ describe('POST /exersice', () => {
 });
 
 describe('GET /exercise/:id', () => {
+
+  beforeEach(()=>{
+    nock.cleanAll()
+  })
   it('should return a correct temperature', async () => {
     const response = await request(app).get(
       '/exercise/638f0496e8fb58228c5e6968'
@@ -96,11 +99,18 @@ describe('GET /exercise/:id', () => {
     expect(response.body.temperature).toBe(25.6);
   });
 
-  it('should return 400 when id does not exist or invalid', async () => {
+  it('should return 400 when id is invalid', async () => {
     const response = await request(app).get(
       '/exercise/hej'
     );
-    console.log(response)
     expect(response.statusCode).toBe(400);
+  });
+
+  it('should return 404 when id does not exist', async () => {
+    const response = await request(app).get(
+      '/exercise/838f0496e8fb58228c5e6968'
+    );
+    console.log(response.statusCode)
+    expect(response.statusCode).toBe(404);
   });
 });

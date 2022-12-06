@@ -1,5 +1,6 @@
 import express, { json } from 'express';
 import { getWeather } from './weather';
+import { isValidId } from './database';
 
 const makeApp = ({ createExercise, getExerciseById, getAllExercise }: any) => {
   const app = express();
@@ -35,7 +36,7 @@ const makeApp = ({ createExercise, getExerciseById, getAllExercise }: any) => {
     } else {
       const exercise = await createExercise(req.body);
       console.log(exercise)
-      
+
       res.json(exercise);
     }
   });
@@ -45,19 +46,24 @@ const makeApp = ({ createExercise, getExerciseById, getAllExercise }: any) => {
   });
 
   app.get('/exercise/:id', async (req, res) => {
-    const exercise = await getExerciseById(req.params.id);
-    console.log(exercise)
-
-    if (!exercise) {
-      res.status(404).send();
-    } else {
-      const weatherAPI = await getWeather();
-      res.json({
-        startTime: exercise.startTime,
-        durationInSeconds: exercise.durationInSeconds,
-        activityType: exercise.activityType,
-        temperature: weatherAPI.data.daily.temperature_2m_max[0],
-      });
+    if (!isValidId(req.params.id)) {
+      res.status(400).send();
+  } else {
+      const exercise = await getExerciseById(req.params.id);
+      console.log('hej', exercise)
+    
+      if (!exercise) {
+        console.log('exercise not defined')
+        res.status(404).send();
+      } else {
+        const weatherAPI = await getWeather();
+        res.json({
+          startTime: exercise.startTime,
+          durationInSeconds: exercise.durationInSeconds,
+          activityType: exercise.activityType,
+          temperature: weatherAPI.data.daily.temperature_2m_max[0],
+        });
+      }
     }
   });
 
